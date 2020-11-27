@@ -22,6 +22,7 @@ helm show values prometheus-community/prometheus --version 12.0.1 > prometheus/v
 helm template prom prometheus-community/prometheus \
     --version 12.0.1 \
     --output-dir=out \
+    -n monitoring \
     -f prometheus/values.yaml
 ```
 
@@ -48,6 +49,23 @@ kubectl port-forward -n monitoring svc/prom-prometheus-server  9090:80
 Create the original value files - which will be customized
 ```
 helm show values prometheus-community/prometheus-blackbox-exporter --version 4.10.1 > prometheus-blackbox-exporter/values.yaml
+```
+
+(Optional) Review rendered templates
+```
+helm template pbe prometheus-community/prometheus-blackbox-exporter \
+    --version 4.10.1 \
+    --output-dir=out \
+    -n monitoring \
+    -f prometheus-blackbox-exporter/values.yaml
+```
+
+Install chart
+```
+helm install pbe prometheus-community/prometheus-blackbox-exporter \
+    --version 4.10.1 \
+    -n monitoring \
+    -f prometheus-blackbox-exporter/values.yaml
 ```
 
 # Sample applications
