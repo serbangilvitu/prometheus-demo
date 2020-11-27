@@ -1,0 +1,37 @@
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 8080
+
+
+deployment:
+  image:
+    repository: docker.io/serbangilvitu/wave
+    pullPolicy: IfNotPresent
+    tag: "jdk11"
+
+  port: 8080
+
+
+  resources:
+     requests:
+       cpu: 500m
+       memory: 128Mi
+     limits:
+       cpu: 1000m
+       memory: 1024Mi
+
+  health:
+    readiness:
+      httpGet:
+        path: /actuator/health
+        port: 8080
+      initialDelaySeconds: 5
+      timeoutSeconds: 5
+    liveness:
+      httpGet:
+        path: /actuator/health
+        port: 8080
+      initialDelaySeconds: 5
+      timeoutSeconds: 5

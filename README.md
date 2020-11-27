@@ -46,15 +46,15 @@ kubectl port-forward -n monitoring svc/prom-prometheus-server  9090:80
 
 # Sample applications
 ```
-k create ns sample
+kubectl create ns sample
 ```
 ## Java - Spring with Actuator
 ```
-git clone https://github.com/serbangilvitu/wave.git
-cd wave
-helm install wave k8s/wave \
+pushd sample-apps/wave
+helm install wave . \
     -n sample \
-    -f k8s/wave/values.yaml
+    -f values.yaml
+popd
 ```
 
 http://localhost:9090/graph?g0.range_input=5m&g0.stacked=1&g0.expr=sum(jvm_memory_used_bytes%7Barea%3D%22heap%22%2Ckubernetes_name%3D%22wave%22%7D)&g0.tab=0
