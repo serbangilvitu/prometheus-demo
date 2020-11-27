@@ -34,7 +34,7 @@ rbac:
   pspEnabled: true
 
 operator:
-  enabled: true
+  enabled: false
 
   ## Bitnami Prometheus Operator image version
   ## ref: https://hub.docker.com/r/bitnami/prometheus-operator/tags/
