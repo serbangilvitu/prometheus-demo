@@ -52,4 +52,9 @@ k create ns sample
 ```
 git clone https://github.com/serbangilvitu/wave.git
 cd wave
+helm install wave k8s/wave \
+    -n sample \
+    -f k8s/wave/values.yaml
 ```
+
+http://localhost:9090/graph?g0.range_input=5m&g0.stacked=1&g0.expr=sum(jvm_memory_used_bytes%7Barea%3D%22heap%22%2Ckubernetes_name%3D%22wave%22%7D)&g0.tab=0
