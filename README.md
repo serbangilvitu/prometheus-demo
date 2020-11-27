@@ -43,3 +43,13 @@ helm ls -n monitoring
 kubectl port-forward -n monitoring svc/prom-kube-state-metrics 8080:8080
 kubectl port-forward -n monitoring svc/prom-prometheus-server  9090:80
 ```
+
+# Sample applications
+```
+k create ns sample
+```
+## Java - Spring with Actuator
+```
+git clone https://github.com/serbangilvitu/wave.git
+cd wave
+```
