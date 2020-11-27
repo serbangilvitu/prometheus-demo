@@ -44,10 +44,30 @@ kubectl port-forward -n monitoring svc/prom-kube-state-metrics 8080:8080
 kubectl port-forward -n monitoring svc/prom-prometheus-server  9090:80
 ```
 
+# prometheus-blackbox-exporter
+Create the original value files - which will be customized
+```
+helm show values prometheus-community/prometheus-blackbox-exporter --version 4.10.1 > prometheus-blackbox-exporter/values.yaml
+```
+
 # Sample applications
 ```
 kubectl create ns sample
 ```
+
+```
+metadata:
+  annotations:
+    prometheus.io/probe: "true"
+```
+
+If the application is exposing metrics via Actuator, then the following annotations are also required
+```
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "{{ .Values.service.port }}"
+    prometheus.io/path: "/actuator/prometheus"
+```
+
 ## Java - Spring with Actuator
 ```
 pushd sample-apps/wave
