@@ -1,16 +1,23 @@
 https://artifacthub.io/packages/helm/prometheus-community/prometheus
 
+
+# Prereq
+* kubectl and helm are in PATH.
+* access to a local or remote Kubernetes cluster
+
 ```
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
-```
-
-# Prereq
-```
 kubectl create ns monitoring
 ```
 
 # kube-state-metrics
+
+kube-state-metrics is a service that listens to the Kubernetes API server and generates metrics about the state of the objects.
+
+Chart page
+https://artifacthub.io/packages/helm/bitnami/kube-state-metrics
+
 Create the original value files - which will be customized
 ```
 helm show values bitnami/kube-state-metrics --version 1.1.0  > kube-state-metrics/values.yaml
