@@ -14,7 +14,7 @@ global:
 
 ## String to partially override kube-state-metrics.fullname template (will maintain the release name)
 ##
-nameOverride: 'mon'
+nameOverride:
 
 ## String to fully override kube-state-metrics.fullname template
 ##

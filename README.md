@@ -6,37 +6,31 @@ https://artifacthub.io/packages/helm/prometheus-community/prometheus
 * access to a local or remote Kubernetes cluster
 
 ```
-helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 kubectl create ns monitoring
 ```
 
-# kube-state-metrics
-
-kube-state-metrics is a service that listens to the Kubernetes API server and generates metrics about the state of the objects.
-
-Chart page
-https://artifacthub.io/packages/helm/bitnami/kube-state-metrics
-
+# prometheus
 Create the original value files - which will be customized
 ```
-helm show values bitnami/kube-state-metrics --version 1.1.0  > kube-state-metrics/values.yaml
+helm show values prometheus-community/prometheus --version 12.0.1 > prometheus/values.yaml
 ```
 
 (Optional) Review rendered templates
 ```
-helm template kube-state-metrics bitnami/kube-state-metrics \
-    --version 1.1.0 \
+helm template prom prometheus-community/prometheus \
+    --version 12.0.1 \
     --output-dir=out \
-    -f kube-state-metrics/values.yaml
+    -f prometheus/values.yaml
 ```
 
 Install chart
 ```
-helm install kube-state-metrics bitnami/kube-state-metrics \
-    --version 1.1.0 \
+helm install prom prometheus-community/prometheus \
+    --version 12.0.1 \
     -n monitoring \
-    -f kube-state-metrics/values.yaml
+    -f prometheus/values.yaml
 ```
 
 (Optional) List releases in the monitoring namespace
@@ -44,13 +38,8 @@ helm install kube-state-metrics bitnami/kube-state-metrics \
 helm ls -n monitoring
 ```
 
-(Optional) Use port forwarding to access the metrics
+(Optional) Use port forwarding to access the services
 ```
-kubectl port-forward --namespace monitoring svc/kube-state-metrics-mon 9100:8080
-```
-
-# prometheus
-Create the original value files - which will be customized
-```
-helm show values bitnami/kube-prometheus --version 3.1.1 > prometheus/values.yaml
+kubectl port-forward -n monitoring svc/prom-kube-state-metrics 8080:8080
+kubectl port-forward -n monitoring svc/prom-prometheus-server  9090:80
 ```
