@@ -87,6 +87,8 @@ If the application is exposing metrics via Actuator, then the following annotati
 ```
 
 ## Java - Spring with Actuator
+Uses [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html)
+[Code](https://github.com/serbangilvitu/wave)
 ```
 pushd sample-apps/wave
 helm install wave . \
@@ -97,6 +99,13 @@ popd
 
 http://localhost:9090/graph?g0.range_input=5m&g0.stacked=1&g0.expr=sum(jvm_memory_used_bytes%7Barea%3D%22heap%22%2Ckubernetes_name%3D%22wave%22%7D)&g0.tab=0
 
+## Python
+Uses the [Prometheus client library](https://prometheus.io/docs/instrumenting/clientlibs/)
+[Code](https://github.com/serbangilvitu/custom-metrics-examples/tree/master/prometheus/python)
+
+Deployment
+
 # Queries
 ## Probe status
 http://localhost:9090/graph?g0.range_input=1h&g0.expr=probe_success%7Bkubernetes_name%3D%22wave%22%2Ckubernetes_namespace%3D%22sample%22%7D&g0.tab=0
+
