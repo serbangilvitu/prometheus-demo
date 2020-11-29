@@ -68,6 +68,12 @@ helm install pbe prometheus-community/prometheus-blackbox-exporter \
     -f prometheus-blackbox-exporter/values.yaml
 ```
 # Grafana
+```
+helm install grafana bitnami/grafana \
+    --version 4.0.3 \
+    -n monitoring \
+    -f grafana/values.yaml
+```
 
 # Sample applications
 ```
