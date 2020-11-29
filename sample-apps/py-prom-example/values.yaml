@@ -1,0 +1,36 @@
+replicaCount: 1
+
+service:
+  type: ClusterIP
+
+
+deployment:
+  image:
+    repository: docker.io/serbangilvitu/py-prom-example
+    pullPolicy: Always
+    tag: "latest"
+  appPort: 8080
+  metricsPort: 9000
+
+
+  resources:
+     requests:
+       cpu: 500m
+       memory: 128Mi
+     limits:
+       cpu: 1000m
+       memory: 1024Mi
+
+  health:
+    readiness:
+      httpGet:
+        path: /
+        port: 8080
+      initialDelaySeconds: 5
+      timeoutSeconds: 5
+    liveness:
+      httpGet:
+        path: /
+        port: 8080
+      initialDelaySeconds: 5
+      timeoutSeconds: 5

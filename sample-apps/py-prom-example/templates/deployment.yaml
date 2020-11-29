@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pyprom.fullname" . }}
+  labels:
+    {{- include "pyprom.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.deployment.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "pyprom.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "pyprom.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}"
+          imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
+          ports:
+            - name: app
+              containerPort: {{ .Values.deployment.appPort }}
+              protocol: TCP
+            - name: metrics
+              containerPort: {{ .Values.deployment.metricsPort }}
+              protocol: TCP
+          livenessProbe: {{- toYaml .Values.deployment.health.liveness | nindent 12 }}
+          readinessProbe: {{- toYaml .Values.deployment.health.readiness | nindent 12 }}
+          resources:
+            {{- toYaml .Values.deployment.resources | nindent 12 }}
