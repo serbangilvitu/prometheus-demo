@@ -67,6 +67,7 @@ helm install pbe prometheus-community/prometheus-blackbox-exporter \
     -n monitoring \
     -f prometheus-blackbox-exporter/values.yaml
 ```
+# Grafana
 
 # Sample applications
 ```
