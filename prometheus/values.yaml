@@ -30,7 +30,7 @@ serviceAccounts:
 alertmanager:
   ## If false, alertmanager will not be installed
   ##
-  enabled: false
+  enabled: true
 
   ## Use a ClusterRole (and ClusterRoleBinding)
   ## - If set to false - we define a Role and RoleBinding in the defined namespaces ONLY
@@ -1174,19 +1174,21 @@ pushgateway:
 ##
 alertmanagerFiles:
   alertmanager.yml:
-    global: {}
+    global:
+      resolve_timeout: 5m
       # slack_api_url: ''
 
     receivers:
-      - name: default-receiver
-        # slack_configs:
-        #  - channel: '@you'
-        #    send_resolved: true
+    - name: 'slack'
+      slack_configs:
+      - channel: '#alerts'
+        api_url: '<slack-webhook>'
+        send_resolved: true
 
     route:
       group_wait: 10s
       group_interval: 5m
-      receiver: default-receiver
+      receiver: 'slack'
       repeat_interval: 3h
 
 ## Prometheus server ConfigMap entries
@@ -1195,7 +1197,18 @@ serverFiles:
 
   ## Alerts configuration
   ## Ref: https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
-  alerting_rules.yml: {}
+  alerting_rules.yml:
+    groups:
+      - name: Services
+        rules:
+          - alert: ServiceDown
+            expr: probe_success == 0
+            for: 1m
+            labels:
+              severity: page
+            annotations:
+              description: '{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute.'
+              summary: 'Service {{ $labels.instance }} down'
   # groups:
   #   - name: Instances
   #     rules:

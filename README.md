@@ -116,3 +116,13 @@ Deployment
 ## Probe status
 http://localhost:9090/graph?g0.range_input=1h&g0.expr=probe_success%7Bkubernetes_name%3D%22wave%22%2Ckubernetes_namespace%3D%22sample%22%7D&g0.tab=0
 
+# Alerts
+Test alerts by scaling down the replicas
+```
+k scale -n sample deployment wave --replicas=0
+```
+
+To receive a resolved notification, scale back to 1
+```
+k scale -n sample deployment wave --replicas=1
+```
