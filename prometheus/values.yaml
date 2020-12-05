@@ -1202,13 +1202,13 @@ serverFiles:
       - name: Services
         rules:
           - alert: ServiceDown
-            expr: probe_success == 0
+            expr: (up{job="kubernetes-services"} == 0) or (probe_success{job="kubernetes-services"} == 0)
             for: 1m
             labels:
-              severity: page
+              severity: high
             annotations:
-              description: '{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute.'
-              summary: 'Service {{ $labels.instance }} down'
+              description: '{{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_name }} of job {{ $labels.job }} has been down for more than 1 minute.'
+              summary: 'Service {{ $labels.kubernetes_namespace }}/{{ $labels.kubernetes_name }} down'
   # groups:
   #   - name: Instances
   #     rules:
