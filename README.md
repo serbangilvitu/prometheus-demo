@@ -12,12 +12,14 @@ kubectl create ns monitoring
 ```
 
 # prometheus
-Create the original value files - which will be customized
+## (Optional) Review value file changes
+You can see the value file changes by comparing `prometheus/values.yaml`with the original value file
 ```
-helm show values prometheus-community/prometheus --version 12.0.1 > prometheus/values.yaml
+helm show values prometheus-community/prometheus --version 12.0.1 > prometheus/original-values.yaml
 ```
 
-(Optional) Review rendered templates
+
+## (Optional) Review rendered templates
 ```
 helm template prom prometheus-community/prometheus \
     --version 12.0.1 \
@@ -26,7 +28,7 @@ helm template prom prometheus-community/prometheus \
     -f prometheus/values.yaml
 ```
 
-Install chart
+## Install chart
 ```
 helm install prom prometheus-community/prometheus \
     --version 12.0.1 \
@@ -46,12 +48,13 @@ kubectl port-forward -n monitoring svc/prom-prometheus-server  9090:80
 ```
 
 # prometheus-blackbox-exporter
-Create the original value files - which will be customized
+## (Optional) Review value file changes
+You can see the value file changes by comparing `prometheus-blackbox-exporter/values.yaml`with the original value file
 ```
-helm show values prometheus-community/prometheus-blackbox-exporter --version 4.10.1 > prometheus-blackbox-exporter/values.yaml
+helm show values prometheus-community/prometheus-blackbox-exporter --version 4.10.1 > prometheus-blackbox-exporter/original-values.yaml
 ```
 
-(Optional) Review rendered templates
+## (Optional) Review rendered templates
 ```
 helm template pbe prometheus-community/prometheus-blackbox-exporter \
     --version 4.10.1 \
@@ -104,16 +107,7 @@ helm install wave . \
 popd
 ```
 
-http://localhost:9090/graph?g0.range_input=5m&g0.stacked=1&g0.expr=sum(jvm_memory_used_bytes%7Barea%3D%22heap%22%2Ckubernetes_name%3D%22wave%22%7D)&g0.tab=0
-
-## Python
-Uses the [Prometheus client library](https://prometheus.io/docs/instrumenting/clientlibs/)
-[Code](https://github.com/serbangilvitu/custom-metrics-examples/tree/master/prometheus/python)
-
-Deployment
-
-# Queries
-## Probe status
+# Probe status
 http://localhost:9090/graph?g0.range_input=1h&g0.expr=probe_success%7Bkubernetes_name%3D%22wave%22%2Ckubernetes_namespace%3D%22sample%22%7D&g0.tab=0
 
 # Alerts
