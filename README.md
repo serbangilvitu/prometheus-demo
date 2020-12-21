@@ -1,9 +1,11 @@
-https://artifacthub.io/packages/helm/prometheus-community/prometheus
 
+# prometheus-demo
+Demo - set up Prometheus and Prometheus Blackbox exporter, a sample service, and send a message on Slack when the service becomes unavailable.
 
-# Prereq
+## Prerequsites
 * kubectl and helm are in PATH.
 * access to a local or remote Kubernetes cluster
+* a Slack account with a configured webhook
 
 ```
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
@@ -11,15 +13,18 @@ helm repo update
 kubectl create ns monitoring
 ```
 
-# prometheus
-## (Optional) Review value file changes
+## prometheus
+### (Optional) Review value file changes
 You can see the value file changes by comparing `prometheus/values.yaml`with the original value file
 ```
 helm show values prometheus-community/prometheus --version 12.0.1 > prometheus/original-values.yaml
 ```
 
+### Update Slack webhook in the value file
+Replace `<slack-webhook>` with the actual webhook.
 
-## (Optional) Review rendered templates
+
+### (Optional) Review rendered templates
 ```
 helm template prom prometheus-community/prometheus \
     --version 12.0.1 \
@@ -28,7 +33,7 @@ helm template prom prometheus-community/prometheus \
     -f prometheus/values.yaml
 ```
 
-## Install chart
+### Deployment
 ```
 helm install prom prometheus-community/prometheus \
     --version 12.0.1 \
@@ -47,14 +52,14 @@ kubectl port-forward -n monitoring svc/prom-kube-state-metrics 8080:8080
 kubectl port-forward -n monitoring svc/prom-prometheus-server  9090:80
 ```
 
-# prometheus-blackbox-exporter
-## (Optional) Review value file changes
+## prometheus-blackbox-exporter
+### (Optional) Review value file changes
 You can see the value file changes by comparing `prometheus-blackbox-exporter/values.yaml`with the original value file
 ```
 helm show values prometheus-community/prometheus-blackbox-exporter --version 4.10.1 > prometheus-blackbox-exporter/original-values.yaml
 ```
 
-## (Optional) Review rendered templates
+### (Optional) Review rendered templates
 ```
 helm template pbe prometheus-community/prometheus-blackbox-exporter \
     --version 4.10.1 \
@@ -63,40 +68,30 @@ helm template pbe prometheus-community/prometheus-blackbox-exporter \
     -f prometheus-blackbox-exporter/values.yaml
 ```
 
-Install chart
+### Deployment
 ```
 helm install pbe prometheus-community/prometheus-blackbox-exporter \
     --version 4.10.1 \
     -n monitoring \
     -f prometheus-blackbox-exporter/values.yaml
 ```
-# Grafana
-```
-helm install grafana bitnami/grafana \
-    --version 4.0.3 \
-    -n monitoring \
-    -f grafana/values.yaml
-```
 
-# Sample applications
+## Sample applications
+Create a new namespace
 ```
 kubectl create ns sample
 ```
 
+Some explanations regarding the annotations used for Kubernetes services:
+* `prometheus.io/probe: "true"` Blackbox exporter will only probe the services which have this annotation
+* if the application is exposing metrics (e.g. via Actuator), then the following annotations are also required
 ```
-metadata:
-  annotations:
-    prometheus.io/probe: "true"
-```
-
-If the application is exposing metrics via Actuator, then the following annotations are also required
-```
-    prometheus.io/scrape: "true"
-    prometheus.io/port: "{{ .Values.service.port }}"
-    prometheus.io/path: "/actuator/prometheus"
+prometheus.io/scrape: "true"
+prometheus.io/port: "{{ .Values.service.port }}"
+prometheus.io/path: "/actuator/prometheus"
 ```
 
-## Java - Spring with Actuator
+### Java - Spring with Actuator
 Uses [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html)
 [Code](https://github.com/serbangilvitu/wave)
 ```
